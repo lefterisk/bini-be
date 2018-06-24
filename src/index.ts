@@ -5,7 +5,7 @@ import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import * as methodOverride from "method-override";
 
-import TapController from "./controllers/TapController";
+import BooksController from "./controllers/BooksController";
 
 const app: any = express();
 app.use(cors({
@@ -18,7 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
 app.use(morgan("dev", {}));
 
-app.post("/api/taps", TapController.post);
+app.post("/api/books", BooksController.post);
+app.get("/api/books", BooksController.get);
 
 app.server = http.createServer(app);
 

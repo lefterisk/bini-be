@@ -4,8 +4,7 @@ const config = {
         database: "bini",
         username: "root",
         password: ""
-    },
-    env: "dev"
+    }
 };
 
 export default config;

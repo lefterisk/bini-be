@@ -4,41 +4,21 @@ import * as Sequelize from "sequelize";
 
 import config from "./config";
 
-import { FareInstance, FareInterface } from "./models/Fare";
-import { RouteInstance, RouteInterface } from "./models/Route";
-import { StageInstance, StageInterface } from "./models/Stage";
-import { StopInstance, StopInterface } from "./models/Stop";
-import { StageStopInstance, StageStopInterface } from "./models/StageStop";
-import { RouteStageInstance, RouteStageInterface } from "./models/RouteStage";
-import { BalanceInstance, BalanceInterface } from "./models/Balance";
-import { JourneyInstance, JourneyInterface } from "./models/Journey";
-import { TapInstance, TapInterface } from "./models/Tap";
-import { ValidityInstance, ValidityInterface } from "./models/Validity";
-import { ZoneInstance, ZoneInterface } from "./models/Zone";
+import { BookInstance, BookInterface } from "./models/Book";
 
 export interface DbConnection {
     sequelize: Sequelize.Sequelize;
-    Fare: Sequelize.Model<FareInstance, FareInterface>;
-    Route: Sequelize.Model<RouteInstance, RouteInterface>;
-    Stage: Sequelize.Model<StageInstance, StageInterface>;
-    Stop: Sequelize.Model<StopInstance, StopInterface>;
-    StageStop: Sequelize.Model<StageStopInstance, StageStopInterface>;
-    RouteStage: Sequelize.Model<RouteStageInstance, RouteStageInterface>;
-    Balance: Sequelize.Model<BalanceInstance, BalanceInterface>;
-    Journey: Sequelize.Model<JourneyInstance, JourneyInterface>;
-    Tap: Sequelize.Model<TapInstance, TapInterface>;
-    Validity: Sequelize.Model<ValidityInstance, ValidityInterface>;
-    Zone: Sequelize.Model<ZoneInstance, ZoneInterface>;
+    Book: Sequelize.Model<BookInstance, BookInterface>;
 }
 
 const sequelize = new Sequelize(config.db.database, config.db.username, config.db.password, {
     host: config.db.host,
     dialect: "mysql",
+    logging: console.log,
     dialectOptions: {
         multipleStatements: true
     },
     operatorsAliases: false,
-    logging: false
 });
 
 sequelize.authenticate().then(() => {
