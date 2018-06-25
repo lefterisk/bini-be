@@ -6,6 +6,10 @@ import * as bodyParser from "body-parser";
 import * as methodOverride from "method-override";
 
 import BooksController from "./controllers/BooksController";
+import CountriesController from "./controllers/CountriesController";
+import CitiesController from "./controllers/CitiesController";
+import LibrariesController from "./controllers/LibraryController";
+import SubjectsController from "./controllers/SubjectsController";
 
 const app: any = express();
 app.use(cors({
@@ -20,6 +24,10 @@ app.use(morgan("dev", {}));
 
 app.post("/api/books", BooksController.post);
 app.get("/api/books", BooksController.get);
+app.get("/api/countries", CountriesController.get);
+app.get("/api/cities", CitiesController.get);
+app.get("/api/libraries", LibrariesController.get);
+app.get("/api/subjects", SubjectsController.get);
 
 app.server = http.createServer(app);
 

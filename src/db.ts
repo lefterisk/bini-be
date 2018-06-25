@@ -5,10 +5,18 @@ import * as Sequelize from "sequelize";
 import config from "./config";
 
 import { BookInstance, BookInterface } from "./models/Book";
+import { CountryInstance, CountryInterface } from "./models/Country";
+import { CityInstance, CityInterface } from "./models/City";
+import { LibraryInstance, LibraryInterface } from "./models/Library";
+import { SubjectInstance, SubjectInterface } from "./models/Subject";
 
 export interface DbConnection {
     sequelize: Sequelize.Sequelize;
     Book: Sequelize.Model<BookInstance, BookInterface>;
+    City: Sequelize.Model<CityInstance, CityInterface>;
+    Country: Sequelize.Model<CountryInstance, CountryInterface>;
+    Library: Sequelize.Model<LibraryInstance, LibraryInterface>;
+    Subject: Sequelize.Model<SubjectInstance, SubjectInterface>;
 }
 
 const sequelize = new Sequelize(config.db.database, config.db.username, config.db.password, {
