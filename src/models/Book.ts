@@ -161,11 +161,6 @@ export default function (sequelize: Sequelize.Sequelize, DataTypes: Sequelize.Da
         const book = this.toJSON();
         book.book_author = _.filter(this.book_author.split("#"), item => Boolean(item));
         book.book_subject = _.filter(this.book_subject.split("#"), item => Boolean(item));
-        book.thematical_classification = _.filter(this.thematical_classification.split("#"), item => Boolean(item));
-        book.tekmirio_language = _.filter(this.tekmirio_language.split("#"), item => Boolean(item));
-        book.libraries = _.filter(this.libraries.split("#"), item => Boolean(item));
-        book.contributors = _.filter(this.contributors.split("#"), item => Boolean(item));
-        book.prototype_author = _.filter(this.prototype_author.split("#"), item => Boolean(item));
         return book;
     };
 

@@ -23,7 +23,7 @@ app.use(methodOverride());
 app.use(morgan("dev", {}));
 
 app.post("/api/books", BooksController.post);
-app.get("/api/books", BooksController.get);
+app.get("/api/book/:id", BooksController.get);
 app.get("/api/countries", CountriesController.get);
 app.get("/api/cities", CitiesController.get);
 app.get("/api/libraries", LibrariesController.get);

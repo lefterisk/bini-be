@@ -1,29 +1,194 @@
-import { Request, Response, Router } from "express";
-import * as _ from "lodash";
+import { Request, Response } from "express";
 
 import { BookInstance } from "../models/Book";
 
+import { FilterTypes } from "../constants";
 
 import db from "../db";
 
+interface FilterInstance {
+    type: string;
+    values: string[];
+}
+
 export default class BooksController {
-    static async post (req: Request, res: Response) {
-        const itemsPerPage: number = req.body.itemsPerPage ? Number(req.body.itemsPerPage) : 20;
-        const page: number = req.body.page ? Number(req.body.page) : 1;
+    static async post(req: Request, res: Response) {
+        const {itemsPerPage = 20, page = 1, filters = []}: { itemsPerPage: number, page: number, filters: FilterInstance[] } = req.body;
         const offset: number = (page - 1) * itemsPerPage;
+        const where: any = {
+            [db.sequelize.Op.and]: []
+        };
+
+        filters.map(filter => {
+            const array: any[] = [];
+            switch (filter.type) {
+                case FilterTypes.AUTHOR:
+                    filter.values.map(value => {
+                        array.push({
+                            book_author: {
+                                [db.sequelize.Op.like]: `%${value}%`
+                            }
+                        });
+                    });
+                    break;
+                case FilterTypes.LANGUAGE:
+                    filter.values.map(value => {
+                        array.push({
+                            tekmirio_language: value
+                        });
+                    });
+                    break;
+                case FilterTypes.COUNTRY_OF_PUBLICATION:
+                    filter.values.map(value => {
+                        array.push({
+                            book_publication_country: value
+                        });
+                    });
+                    break;
+                case FilterTypes.CITY_OF_PUBLICATION:
+                    filter.values.map(value => {
+                        array.push({
+                            book_publication_city: value
+                        });
+                    });
+                    break;
+                case FilterTypes.PUBLICATION_TYPE:
+                    filter.values.map(value => {
+                        array.push({
+                            book_publication_type: value
+                        });
+                    });
+                    break;
+                case FilterTypes.PUBLISHER:
+                    filter.values.map(value => {
+                        array.push({
+                            [db.sequelize.Op.or]: [
+                                {
+                                    book_publisher: {
+                                        [db.sequelize.Op.like]: `%${value}%`
+                                    }
+                                },
+                                {
+                                    book_printer: {
+                                        [db.sequelize.Op.like]: `%${value}%`
+                                    }
+                                },
+                            ]
+
+                        });
+                    });
+                    break;
+                case FilterTypes.SUBJECT:
+                    filter.values.map(value => {
+                        array.push({
+                            book_subject: value
+                        });
+                    });
+                    break;
+                case FilterTypes.TITLE:
+                    filter.values.map(value => {
+                        array.push({
+                            [db.sequelize.Op.or]: [
+                                {
+                                    book_title: {
+                                        [db.sequelize.Op.like]: `%${value}%`
+                                    }
+                                },
+                                {
+                                    book_parallel_title: {
+                                        [db.sequelize.Op.like]: `%${value}%`
+                                    }
+                                },
+                                {
+                                    book_sub_title: {
+                                        [db.sequelize.Op.like]: `%${value}%`
+                                    }
+                                },
+                            ]
+
+                        });
+                    });
+                    break;
+                case FilterTypes.YEAR_OF_PUBLICATION:
+                    filter.values.map(value => {
+                        const dates = value.split("-");
+
+                        if (dates[0] && dates[1]) {
+                            if (dates[0] <= dates[1]) {
+                                array.push({
+                                    book_publication_year: {
+                                        [db.sequelize.Op.between]: [Number(dates[0]), Number(dates[1])]
+                                    }
+                                });
+                            } else if (dates[0] > dates[1]) {
+                                array.push({
+                                    book_publication_year: {
+                                        [db.sequelize.Op.or]: {
+                                            [db.sequelize.Op.gte]: Number(dates[0]),
+                                            [db.sequelize.Op.lte]: Number(dates[1])
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        if (dates[0] && !dates[1]) {
+                            array.push({
+                                book_publication_year: {
+                                    [db.sequelize.Op.gte]: Number(dates[0])
+                                }
+                            });
+                        }
+
+                        if (!dates[0] && dates[1]) {
+                            array.push({
+                                book_publication_year: {
+                                    [db.sequelize.Op.lte]: Number(dates[1])
+                                }
+                            });
+                        }
+                    });
+                    break;
+            }
+            where[db.sequelize.Op.and].push({
+                [db.sequelize.Op.or]: array
+            });
+        });
+
         try {
-            const {rows, count} = await db.Book.findAndCountAll({
-                where: {},
+            const {rows, count}: {rows: BookInstance[], count: number} = await db.Book.findAndCountAll({
+                attributes: [
+                    "id",
+                    "book_author",
+                    "book_title",
+                    "book_publication_year",
+                    "book_publication_country",
+                    "book_publication_city",
+                    "book_subject"
+                ],
+                where,
                 limit: itemsPerPage,
                 offset: offset
             });
-            return res.json({ books: rows.map((book: any) => book.toShortJS()), count });
+            return res.json({books: rows.map((book: any) => book.toShortJS()), count});
         } catch (err) {
-            return res.status(500).json({err: err.message });
+            return res.status(500).json({err: err.message});
         }
     }
 
-    static async get (req: Request, res: Response) {
-        return res.json({ method: "get" });
+    static async get(req: Request, res: Response) {
+        try {
+            const book: any = await db.Book.findOne({
+                where: {
+                    id: req.params.id
+                }
+            });
+            if (!book) {
+                return res.status(500).json({err: "BOOK_DOESNT_EXIST"});
+            }
+            return res.json({book: book.toLongJS()});
+        } catch (err) {
+            return res.status(500).json({err: err.message});
+        }
     }
 }
