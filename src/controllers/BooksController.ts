@@ -34,7 +34,9 @@ export default class BooksController {
                 case FilterTypes.LANGUAGE:
                     filter.values.map(value => {
                         array.push({
-                            tekmirio_language: value
+                            tekmirio_language: {
+                                [db.sequelize.Op.like]: `%${value}%`
+                            }
                         });
                     });
                     break;
