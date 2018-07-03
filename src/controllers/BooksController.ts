@@ -186,7 +186,7 @@ export default class BooksController {
                 }
             });
             if (!book) {
-                return res.status(500).json({err: "BOOK_DOESNT_EXIST"});
+                return res.status(404).json({err: "BOOK_DOESNT_EXIST"});
             }
             return res.json({book: book.toLongJS()});
         } catch (err) {
