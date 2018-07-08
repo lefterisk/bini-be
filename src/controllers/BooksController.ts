@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { BookInstance } from "../models/Book";
 
-import { FilterTypes } from "../constants";
+import { FilterTypes, allFields } from "../constants";
 
 import db from "../db";
 
@@ -22,6 +22,17 @@ export default class BooksController {
         filters.map(filter => {
             const array: any[] = [];
             switch (filter.type) {
+                case FilterTypes.ALL:
+                    filter.values.map(value => {
+                        allFields.map(field => {
+                            array.push({
+                                [field]: {
+                                    [db.sequelize.Op.like]: `%${value}%`
+                                }
+                            });
+                        });
+                    });
+                    break;
                 case FilterTypes.AUTHOR:
                     filter.values.map(value => {
                         array.push({
