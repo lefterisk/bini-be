@@ -24,7 +24,7 @@ export default class BooksController {
             switch (filter.type) {
                 case FilterTypes.ALL:
                     filter.values.map(value => {
-                        allFields.map(field => {
+                        allFields.filter(field => field !== "libraries").map(field => {
                             array.push({
                                 [field]: {
                                     [db.sequelize.Op.like]: `%${value}%`
@@ -177,11 +177,12 @@ export default class BooksController {
                     "book_publication_year",
                     "book_publication_country",
                     "book_publication_city",
-                    "book_subject"
+                    "book_pages"
                 ],
                 where,
                 limit: itemsPerPage,
-                offset: offset
+                offset: offset,
+                order: [["book_publication_year", "ASC"]]
             });
             return res.json({books: rows.map((book: any) => book.toShortJS()), count});
         } catch (err) {

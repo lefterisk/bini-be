@@ -158,7 +158,7 @@ export default function (sequelize: Sequelize.Sequelize, DataTypes: Sequelize.Da
     Book.prototype.toShortJS = function () {
         const book = this.toJSON();
         book.book_author = _.filter(this.book_author.split("#"), item => Boolean(item));
-        book.book_subject = _.filter(this.book_subject.split("#"), item => Boolean(item));
+        // book.book_subject = _.filter(this.book_subject.split("#"), item => Boolean(item));
         return book;
     };
 
@@ -174,6 +174,7 @@ export default function (sequelize: Sequelize.Sequelize, DataTypes: Sequelize.Da
             return `${parts[0]} (${parts[1]})`;
         });
         book.prototype_author = _.filter(this.prototype_author.split("#"), item => Boolean(item));
+        book.url = _.filter(this.url.split(", "), item => Boolean(item));
         return book;
     };
 
