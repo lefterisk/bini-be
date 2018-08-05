@@ -8,6 +8,8 @@ export const FilterTypes = {
     PUBLISHER: "publisher",
     SUBJECT: "subject",
     TITLE: "title",
+    THEMATICAL_CLASSIFICATION: "thematicalClassification",
+    IDOLOGICAL_CLASSIFICATION: "idologicalClassification",
     YEAR_OF_PUBLICATION: "yearOfPublication"
 };
 

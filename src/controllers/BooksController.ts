@@ -51,6 +51,24 @@ export default class BooksController {
                         });
                     });
                     break;
+                case FilterTypes.THEMATICAL_CLASSIFICATION:
+                    filter.values.map(value => {
+                        array.push({
+                            thematical_classification: {
+                                [db.sequelize.Op.like]: `%${value}%`
+                            }
+                        });
+                    });
+                    break;
+                case FilterTypes.IDOLOGICAL_CLASSIFICATION:
+                    filter.values.map(value => {
+                        array.push({
+                            idological_classification: {
+                                [db.sequelize.Op.like]: `%${value}%`
+                            }
+                        });
+                    });
+                    break;
                 case FilterTypes.COUNTRY_OF_PUBLICATION:
                     filter.values.map(value => {
                         array.push({
