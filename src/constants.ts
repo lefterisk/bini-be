@@ -10,7 +10,8 @@ export const FilterTypes = {
     TITLE: "title",
     THEMATICAL_CLASSIFICATION: "thematicalClassification",
     IDOLOGICAL_CLASSIFICATION: "idologicalClassification",
-    YEAR_OF_PUBLICATION: "yearOfPublication"
+    YEAR_OF_PUBLICATION: "yearOfPublication",
+    CHRONOLOGICAL_CLASSIFICATION: "chronologicalClassification"
 };
 
 export const allFields = [ "book_author",

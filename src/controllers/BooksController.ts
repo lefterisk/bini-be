@@ -69,6 +69,13 @@ export default class BooksController {
                         });
                     });
                     break;
+                case FilterTypes.CHRONOLOGICAL_CLASSIFICATION:
+                    filter.values.map(value => {
+                        array.push({
+                            cronological_classification: value
+                        });
+                    });
+                    break;
                 case FilterTypes.COUNTRY_OF_PUBLICATION:
                     filter.values.map(value => {
                         array.push({
